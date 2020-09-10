@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.insynia.bulksms">
     <application
-        android:name="io.flutter.app.BulkSMS"
+        android:name="io.flutter.app.FlutterApplication"
         android:label="Bulk SMS"
         android:icon="@mipmap/launcher_icon">
         <activity

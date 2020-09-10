@@ -1,12 +1,23 @@
 import 'dart:io';
 
-import 'package:bulksms/contacts.dart';
+import 'package:bulksms/container.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
+void init() async {
+  final directory = await getApplicationDocumentsDirectory();
+  final path = directory.path;
+  Directory("$path/csvGroups").create();
+}
 
 void main() {
   runApp(MyApp());
+  init();
 }
+
+final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+final GlobalKey<BulkSmsState> containerKey = GlobalKey();
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -36,7 +47,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+  HomePage({Key key, this.title, this.fileCb}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -48,34 +59,33 @@ class HomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final Function(File) fileCb;
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  File _csv;
-
   void readFile() async {
     File file = await FilePicker.getFile(
-        type: FileType.custom, allowedExtensions: ['*']);
-    setState(() {
-      _csv = file;
-    });
+        type: FileType.custom, allowedExtensions: ['csv']);
+
+    containerKey.currentState.addContacts(file);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Center(
-        child: BulkSms(file: _csv),
+        child: BulkSms(key: containerKey),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: readFile,
-        tooltip: 'Lire un CSV',
+        tooltip: 'Read CSV File',
         child: Icon(Icons.file_upload),
       ),
     );
