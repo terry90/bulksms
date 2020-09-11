@@ -68,7 +68,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   void readFile() async {
     File file = await FilePicker.getFile(
-        type: FileType.custom, allowedExtensions: ['csv']);
+        type: FileType.custom, allowedExtensions: ['*']);
 
     containerKey.currentState.addContacts(file);
   }

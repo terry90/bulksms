@@ -30,7 +30,11 @@ class MainActivity: FlutterActivity() {
       private fun _sendSMS(phoneNo: String, msg: String, result: MethodChannel.Result) {
         try {
             val smsManager = SmsManager.getDefault()
-            smsManager.sendTextMessage(phoneNo, null, msg, null, null)
+
+            val parts = smsManager.divideMessage(msg);
+
+            smsManager.sendMultipartTextMessage(phoneNo, null, parts, null, null);
+
             result.success("SMS Sent")
         } catch (ex: Exception) {
             ex.printStackTrace()

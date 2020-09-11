@@ -70,7 +70,7 @@ class ContactGroup {
 
     if (file != null) {
       for (var line in await file.readAsLines()) {
-        if (line == "") break;
+        if (line == "") continue;
 
         try {
           contacts.add(Contact.fromLine(line));
